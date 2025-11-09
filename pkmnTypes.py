@@ -41,10 +41,12 @@ typeChart = [
     [1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1],  # Fairy
 ]
 
-numberEffectiveness = {
+TYPE_EFFECTIVENESS = {
+    4: "Extremely effective",
     2: "Super effective",
     1: "Effective",
     0.5: "Not very effective",
+    0.25: "Mostly ineffective",
     0: "Immune",
 }
 
@@ -66,15 +68,10 @@ class Type:
             c[t] = typeChart[i][typeNames.index(self.name)]
         return c
 
-    def attackEffectiveness(self, other, isAttacking):
+    def getAttackEffectiveness(self, other, isAttacking=False):
         if isAttacking:
-            print(
-                f"{self.name} × {other} → {numberEffectiveness[self.chart[0][other]]}"
-            )
-        else:
-            print(
-                f"{other} × {self.name} → {numberEffectiveness[self.chart[1][other]]}"
-            )
+            return self.chart[0][other]
+        return self.chart[1][other]
 
 
 types = []

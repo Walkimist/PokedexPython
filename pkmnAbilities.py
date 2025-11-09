@@ -31,7 +31,6 @@ class Ability:
         self.name = data["name"]  # str
         self.shortDescription = self.getDescription(data, False)
         self.fullDescription = self.getDescription(data, True)  # str
-        self.isHidden = data.get("is_hidden", False)  # bool
 
     def getDescription(self, data, full):
         entries = data.get("effect_entries", [])
