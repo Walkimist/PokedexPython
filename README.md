@@ -4,6 +4,7 @@ This is a project that aims to display a pokedex with all pokémon, moves, abili
 ## Current Features:
 - Search pokémon by id or name, displaying:
   * Name and national Dex Number
+  * Types
   * Genus
   * Height and weight
   * Abilities
