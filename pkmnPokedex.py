@@ -1,13 +1,11 @@
 import pickle
 import os
-from pkmnTypes import types, typeNames, TYPE_EFFECTIVENESS
+from pkmnTypes import types
 from pkmnAbilities import abilities
 from apiRequestFunctions import getPokemonData, getSpeciesData
 
 POKEMON_SAVE_PATH = "pokemon.pkl"
-NUM_OF_POKEMON = 151
-MACHINE_TO_TM = {"Machine": "TM", "Tutor": "Tutor"}  ## for display only
-BOOL_TO_CHECKMARK = {True: "✓", False: "✗"}
+NUM_OF_POKEMON = 3
 
 
 def loadPokemon():
@@ -67,8 +65,16 @@ class Pokemon:
         self.baseStats = self.getStats(pokemonData, False)  # dict
         self.bst = sum(self.baseStats.values())  # int
 
+        # Evolution line
+        self.evoLineId = self.getEvoLineId(speciesData)
+
         # Moveset
         self.moveSet = self.getMoveset(pokemonData)  # dict
+
+    def getEvoLineId(self, data):
+        rawUrl = data["evolution_chain"]["url"]
+        baseUrl = "https://pokeapi.co/api/v2/evolution-chain/"
+        return int(rawUrl.replace(baseUrl, "")[:-1])
 
     def getGenus(self, data):
         entries = data.get("genera", [])
@@ -120,113 +126,4 @@ class Pokemon:
         return stats
 
 
-def searchForPokemon(s):
-    for p in pokemon:
-        if type(s) == int:
-            if p.id == s:
-                return p
-        elif type(s) == str:
-            if p.name.lower() == s.lower():
-                return p
-
-
-def displayEntry(p):
-    ### Pokedex data
-    print(f"\nDex number: {p.id}")
-    print(f"Name: {formatText(p.name)}")
-    if len(p.types) > 1:
-        print(f"Types: {p.types[0].name}, {p.types[1].name}")
-    else:
-        print(f"Type: {p.types[0].name}")
-    print(f"Genus: {p.genus}")
-    print(f"Height: {p.height/10}m")
-    print(f"Weight: {p.weight/10}kg")
-    print("\nAbilities:")
-    for a in p.abilities:
-        if a["hidden"]:
-            print(
-                f"{formatText(a['ability'].name)} - Hidden - {a['ability'].shortDescription}"
-            )
-        else:
-            print(f"{formatText(a['ability'].name)} - {a['ability'].shortDescription}")
-
-    ### Training
-    print("\nEV Yield:")
-    for y in p.evYield.keys():
-        print(f"{formatText(y)}: {p.evYield[y]}")
-    print(f"\nCatch Rate: {p.catchRate}")
-    print(f"Base Friendship: {p.baseFriendship}")
-    print(f"Base Exp.: {p.baseExp}")
-    print(f"Growth Rate: {formatText(p.growthRate)}")
-
-    ### Breeding
-    print("\nEgg Groups: ", end="")
-    for e in p.eggGroups:
-        print(f"{formatText(e)}", end="")
-        if e != p.eggGroups[-1]:
-            print(",", end=" ")
-    if p.genderRatio > -1:
-        print(
-            f"\nGender Ratio: {100-(p.genderRatio / 8) * 100}% Male, {(p.genderRatio / 8) * 100}% Female"
-        )
-    else:
-        print(f"\nGender: Genderless")
-    print(f"Egg Cycles: {p.eggCycles}")
-
-    ### Stats
-    print("\nStats:")
-    for s in p.baseStats.keys():
-        print(f"{formatText(s)}: {p.baseStats[s]}")
-    print(f"Total: {p.bst}")
-
-    ### Type defenses
-    print("\nType Defenses:")
-    for t in typeNames:
-        if len(p.types) > 1:
-            totalEffectiveness = p.types[0].getAttackEffectiveness(t) * p.types[
-                1
-            ].getAttackEffectiveness(t)
-        else:
-            totalEffectiveness = p.types[0].getAttackEffectiveness(t)
-        print(f"{t}: {TYPE_EFFECTIVENESS[totalEffectiveness]}")
-
-    ### Classification
-    print("\nClassification:")
-    print(f"Baby: {BOOL_TO_CHECKMARK[p.isBaby]}")
-    print(f"Legendary: {BOOL_TO_CHECKMARK[p.isLegendary]}")
-    print(f"Mythical: {BOOL_TO_CHECKMARK[p.isMythical]}")
-
-    ### Visual info
-    print("\nVisual Data:")
-    print(f"Color: {formatText(p.color)}")
-    print(f"Shape: {formatText(p.shape)}")
-    print(f"Gender differences: {BOOL_TO_CHECKMARK[p.hasGenderDifferences]}")
-
-    ### Moves
-    print("\nMoves by Level:")
-    for m in p.moveSet.keys():
-        if p.moveSet[m]["move_learn_method"] == "level-up":
-            print(f"{formatText(m)} - {p.moveSet[m]["level_learned_at"]}")
-
-    print("\nMoves by TM/Tutor:")
-    for m in p.moveSet.keys():
-        if (
-            p.moveSet[m]["move_learn_method"] != "level-up"
-            and p.moveSet[m]["move_learn_method"] != "egg"
-        ):
-            print(
-                f"{formatText(m)} - {MACHINE_TO_TM[formatText(p.moveSet[m]['move_learn_method'])]}"
-            )
-
-    print("\nEgg moves:")
-    for m in p.moveSet.keys():
-        if p.moveSet[m]["move_learn_method"] == "egg":
-            print(f"{formatText(m)} - {formatText(p.moveSet[m]['move_learn_method'])}")
-
-
-def formatText(t):
-    return t.replace("-", " ").capitalize()
-
-
 pokemon = loadPokemon()
-displayEntry(searchForPokemon("Mewtwo"))

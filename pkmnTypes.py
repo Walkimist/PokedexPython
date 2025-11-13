@@ -41,15 +41,6 @@ typeChart = [
     [1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1],  # Fairy
 ]
 
-TYPE_EFFECTIVENESS = {
-    4: "Extremely effective",
-    2: "Super effective",
-    1: "Effective",
-    0.5: "Not very effective",
-    0.25: "Mostly ineffective",
-    0: "Immune",
-}
-
 
 class Type:
     def __init__(self, name):

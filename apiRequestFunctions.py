@@ -40,7 +40,19 @@ def getAbilityData(abilityID):
 
 
 def getMoveData(moveID):
-    url = f"{BASE_URL}move;{moveID}"
+    url = f"{BASE_URL}move/{moveID}"
+    try:
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            return response.json()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def getEvoLineData(evoLineID):
+    url = f"{BASE_URL}evolution-chain/{evoLineID}"
     try:
         response = requests.get(url)
 
