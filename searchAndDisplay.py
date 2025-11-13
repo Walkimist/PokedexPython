@@ -124,7 +124,7 @@ def displayEntry(p):
         if p.moveSet[m]["move_learn_method"] == "egg":
             print(f"{formatText(m)} - {formatText(p.moveSet[m]['move_learn_method'])}")
 
-    print(f"\nEvolution Line: {p.evoLine}")
+    # print(f"\nEvolution Line: {p.evoLine}")
 
 
 def formatText(t):
@@ -132,6 +132,7 @@ def formatText(t):
 
 
 userInput = input("Type Pokémon name or National dex number: ")
+os.system("cls")
 while userInput != "":
     if userInput == "":
         break

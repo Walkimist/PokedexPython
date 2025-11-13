@@ -3,7 +3,7 @@ from pkmnTypes import types
 import pickle
 import os
 
-MOVES_SAVE_PATH = "moves.pkl"
+MOVES_SAVE_PATH = "cached/moves.pkl"
 NUM_OF_MOVES = 919
 
 

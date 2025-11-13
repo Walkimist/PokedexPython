@@ -4,7 +4,7 @@ from pkmnTypes import types
 from pkmnAbilities import abilities
 from apiRequestFunctions import getPokemonData, getSpeciesData
 
-POKEMON_SAVE_PATH = "pokemon.pkl"
+POKEMON_SAVE_PATH = "cached/pokemon.pkl"
 NUM_OF_POKEMON = 3
 
 

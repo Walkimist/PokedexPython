@@ -2,7 +2,7 @@ from apiRequestFunctions import getAbilityData
 import pickle
 import os
 
-ABILITIES_SAVE_PATH = "abilities.pkl"
+ABILITIES_SAVE_PATH = "cached/abilities.pkl"
 NUM_OFABILITIES = 307
 
 
@@ -11,6 +11,7 @@ def loadAbilities():
         with open(ABILITIES_SAVE_PATH, "rb") as f:
             return pickle.load(f)
     else:
+        os.mkdir("cached")
         return buildAbilities()
 
 
